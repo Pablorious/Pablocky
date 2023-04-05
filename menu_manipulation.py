@@ -10,7 +10,7 @@ def is_rect_dict(d):
     if not type(d) == dict: 
         return False
     for k,v in d.items():
-        if not isinstance(k, Rect):
+        if not isinstance(v, Rect):
             return False
     return True
 
@@ -18,7 +18,7 @@ def is_label_dict(d):
     if not type(d) == dict: 
         return False
     for k,v in d.items():
-        if not isinstance(k,Label):
+        if not isinstance(v,Label):
             return False
     return True
 
@@ -26,7 +26,7 @@ def is_button_dict(d):
     if not type(d) == dict: 
         return False
     for k,v in d.items():
-        if not isinstance(k,Button):
+        if not isinstance(v,Button):
             return False
     return True
 
@@ -143,6 +143,7 @@ def random_square(size_min,size_max):
 def rect_below(rect1, rect2):
     rect2.top = rect1.bottom
     return rect2
+
 def rect_dict_below(reference_rect, rect_dict):
     return map_rect_dict_func(rect_dict, lambda rect: rect_below(reference_rect, rect))
 def label_dict_below(reference_rect, label_dict):
@@ -152,15 +153,18 @@ def label_dict_below(reference_rect, label_dict):
     return new_label_dict
 
 def below(obj1,obj2):
-    print (get_rect(obj1),obj2)
+    if isinstance(obj1,Label):
+        return label_dict_below(obj1.rect,obj2)
+    if is_button_dict(obj1):
+        return label_dict_below(get_rect(obj1),obj2)
 
 def get_rect(obj):
     if type(obj) == dict:
         return get_rect(next(iter(obj.items())))[1]
     if type(obj) == list:
         return get_rect(obj[0])
-    if not isinstance(obj,Rect):
-        return get_rect(obj.rect)
+    if isinstance(obj,Button) or isinstance(obj,Label):
+        return obj.rect
     return obj
 
 def flow_rects_right(rects_list):

@@ -10,6 +10,10 @@ class StartMenu(Menu):
 	def __init__(self):
 		super(StartMenu,self).__init__()	
 		
+		game_modes = ["dodge mode","click mode","groovy mode","circle mode (forbidden)"]	
+	
+		difficulty_levels = ["easy","medium","hard","impossible"]
+		
 		max_x = 1366
 		max_y = 766
 		quarter_y = max_y/4
@@ -17,26 +21,26 @@ class StartMenu(Menu):
 		half_x = max_x/2
 
 		title = margin(5,Label(gen_rect(max_x,quarter_y),"PABLOCKY",Color.BLACKGREY,220))
-		difficulty_levels = ["easy","medium","hard","impossible"]
-		game_modes = ["dodge mode","click mode","groovy mode","circle mode (forbidden)"]	
-	
-		mode_buttons = label_dict_below(title.rect,{ 
+		mode_buttons = below(title,{ 
 				mode : Button(gen_rect(quarter_x,40), mode, Color.BLUE if mode == "dodge mode" else Color.BLACK, 25)
 				for mode in game_modes
 		})
+		print("mode buttons" + str(mode_buttons))
 
-		difficulty_buttons = label_dict_below(mode_buttons["dodge mode"].rect,{
+		difficulty_buttons = below(mode_buttons,{
 					level: Button(gen_rect(quarter_x,40),level, 
 					Color.BLUE if level == "easy" else Color.GREY, 25, 
 					lambda l=level: self.set_difficulty(l)) 
 					for level in difficulty_levels
 				})
-
+		print("difficulty buttons" + str(difficulty_buttons))
 	
-		game_buttons = label_dict_below(difficulty_buttons["easy"].rect,{
+		game_buttons = below(difficulty_buttons,{
 					"start": Button(gen_rect(half_x,50),"start", Color.GREEN, 50, self.start_function),
 					"quit": Button(gen_rect(half_x,50),"quit",Color.RED, 50, self.quit_function)
 		})
+	
+		print("game_buttons" + str(game_buttons))
 
 		self.labels = {"title" : title}
 		self.buttons = difficulty_buttons | game_buttons | mode_buttons
