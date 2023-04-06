@@ -63,78 +63,24 @@ def rect_to_label_function(label, func):
     new_label.rect = func(label.rect)
     return new_label
 
-def margin_top_rect(margin_px, rect):
+def margin_rect(margin_px,rect):
     new_rect = rect
+    new_rect.width -= 2*margin_px
+    new_rect.height -= 2*margin_px
+    new_rect.x += margin_px
     new_rect.y += margin_px
-    new_rect.height -= margin_px
     return new_rect
-def margin_top_label(margin_px,label):
-    return rect_to_label_function(label, lambda rect: margin_top_rect(margin_px,rect))
-def margin_top_label_dict(margin_px,label_dict):
-    return { key: margin_top_label(margin_px,label) for key,label in label_dict.items()}
-
-def margin_top(margin_px, obj):
-    if isinstance(obj, Label):
-        return margin_top_label(margin_px,obj)
-    elif type(obj) == dict:
-        return margin_top_label_dict(margin_px,obj)
-    elif type(obj) == Rect:
-        return margin_top_rect(margin_px,obj)
-
-def margin_bottom_rect(margin_px,rect):
-    new_rect = rect
-    new_rect.height -= margin_px
-    return new_rect
-def margin_bottom_label(margin_px,label):
-    return rect_to_label_function(label,lambda rect: margin_bottom_rect(margin_px,rect))
-def margin_bottom_label_dict(margin_px,label_dict):
-    return {key : margin_bottom_label(margin_px,label) for key,label in label_dict.items()}
-
-def margin_vertical_rect(margin_px,rect):
-    margin_bottom_rect(margin_px,margin_top_rect(margin_px,rect))
-def margin_vertical_label(margin_px,label):
-    return margin_top_label(margin_px,margin_bottom_label(margin_px,label))
-def margin_vertical_label_dict(margin_px,label_dict):
-    return {key:margin_vertical_label(margin_px,label) for key,label in label_dict.items()}
-
-def margin_right_rect(margin_px,rect):
-    new_rect = rect
-    new_rect.width -= margin_px
-    return new_rect
-def margin_right_label(margin_px,label):
-    return rect_to_label_function(label,lambda rect: margin_right_rect(margin_px,rect))
-def margin_right_label_dict(margin_px,label_dict):
-    return { key: margin_right_label(margin_px,label) for key,label in label_dict.items()}
-
-def margin_left_rect(margin_px,rect):
-    new_rect = rect
-    new_rect.left += margin_px
-    new_rect.width -= margin_px
-    return new_rect
-def margin_left_label(margin_px,label):
-    return rect_to_label_function(label, lambda rect: margin_left_rect(margin_px,rect))
-def margin_left_label_dict(margin_px,label_dict):
-    return { key: margin_left_label(margin_px,label) for key,label in label_dict.items()}
-
-def margin_horizontal_rect(margin_px,rect):
-    return margin_left_rect(margin_px,margin_right_rect(margin_px,rect))
-def margin_horizontal_label(margin_px,label):
-    return margin_left_label(margin_px,margin_right_label(margin_px,label))
-def margin_horizontal_label_dict(margin_px,label_dict):
-    return margin_left_label_dict(margin_px,margin_right_label_dict(margin_px,label_dict))
-
-
-def margin_label(margin_px,label):
-    return margin_horizontal_label(margin_px,margin_vertical_label(margin_px,label))
-def margin_label_dict(margin_px,label_dict):
-    return margin_horizontal_label_dict(margin_px,margin_vertical_label_dict(margin_px,label_dict))
-
+     
 def margin(margin_px,obj):
+    if type(obj) == Label or type(obj) == Button:
+       obj.rect = margin_rect(margin_px, obj.rect)
+       return obj
     if is_button_dict(obj) or is_label_dict(obj):
-        return margin_label_dict(margin_px,obj)
-    elif isinstance(obj,Label):
-        return margin_label(margin_px,obj)
-    return None
+        new_button_dict = obj
+        for key,button in new_button_dict.items():
+            new_button_dict[key].rect = margin_rect(margin_px, button.rect)
+        return new_button_dict
+
 
 def random_square(size_min,size_max):
     size = randint(size_min,size_max)
@@ -146,6 +92,7 @@ def rect_below(rect1, rect2):
 
 def rect_dict_below(reference_rect, rect_dict):
     return map_rect_dict_func(rect_dict, lambda rect: rect_below(reference_rect, rect))
+
 def label_dict_below(reference_rect, label_dict):
     new_label_dict = label_dict
     for key,label in new_label_dict.items():
@@ -160,7 +107,7 @@ def below(obj1,obj2):
 
 def get_rect(obj):
     if type(obj) == dict:
-        return get_rect(next(iter(obj.items())))[1]
+        return get_rect(next(iter(obj.items()))[1])
     if type(obj) == list:
         return get_rect(obj[0])
     if isinstance(obj,Button) or isinstance(obj,Label):
