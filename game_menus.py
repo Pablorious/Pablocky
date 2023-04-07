@@ -1,6 +1,6 @@
 from menu_assets import *
 from game_assets import *
-from menu_manipulation import margin, gen_rect, flow_right, below, label_dict_below
+from menu_manipulation import margin, gen_rect, flow_right, below,
 from vec2d import *
 
 class StartMenu(Menu):
@@ -9,7 +9,6 @@ class StartMenu(Menu):
 	
 	def __init__(self):
 		super(StartMenu,self).__init__()	
-		
 	
 		max_x = 1366
 		max_y = 766
@@ -17,20 +16,20 @@ class StartMenu(Menu):
 		quarter_x = max_x/4
 		half_x = max_x/2
 
-		game_modes = ["dodge mode","click mode","groovy mode","circle mode (forbidden)"]	
-		difficulty_levels = ["easy","medium","hard","impossible"]
-	
 		title = margin(5,Label(gen_rect(max_x,quarter_y),"PABLOCKY",Color.BLACKGREY,220))
-		mode_buttons = flow_right(margin(5,below(title,{ 
-				mode : Button(gen_rect(quarter_x,40), mode, Color.BLUE if mode == "dodge mode" else Color.BLACK, 25)
-				for mode in game_modes
+		
+		mode_buttons = margin(5,flow_right(below(title,{ 
+				mode : Button(gen_rect(quarter_x,40), mode, Color.BLUE if mode == "dodge mode" else Color.BLACKGREY, 25)
+				for mode in ["dodge mode","click mode","groovy mode","circle mode (forbidden)"]
 		})))
+
 		difficulty_buttons = margin(5,flow_right(below(mode_buttons,{
 					level: Button(gen_rect(quarter_x,40),level, 
 					Color.BLUE if level == "easy" else Color.GREY, 25, 
 					lambda l=level: self.set_difficulty(l)) 
-					for level in difficulty_levels
-				})))
+					for level in ["easy","medium","hard","impossible"]
+		})))
+
 		game_buttons = margin(5,flow_right(below(difficulty_buttons,{
 					"start": Button(gen_rect(half_x,50),"start", Color.GREEN, 50, self.start_function),
 					"quit": Button(gen_rect(half_x,50),"quit",Color.RED, 50, self.quit_function)
@@ -61,6 +60,7 @@ class StartMenu(Menu):
 			"hard": 100,
 			"impossible": 50
 		}
+
 		if s in difficulty_dict:
 			FallerAdder.init_increase_rate = difficulty_dict[s]
 			FallerAdder.increase_rate = difficulty_dict[s]
