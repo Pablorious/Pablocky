@@ -1,6 +1,6 @@
 from menu_assets import *
 from game_assets import *
-from menu_manipulation import margin, gen_rect, flow_right, below,
+from menu_manipulation import margin, gen_rect, flow_right, below
 from vec2d import *
 
 class StartMenu(Menu):
@@ -84,6 +84,7 @@ class PlayMenu(Menu):
 			if event.type == pygame.KEYDOWN:
 				if event.key == pygame.K_ESCAPE: 
 					MenuManager.mode = "menu"
+
 		pressed = pygame.key.get_pressed()
 		acceleration = vec2d(0,0)
 		if pressed[pygame.K_a]:
@@ -111,14 +112,19 @@ class PlayMenu(Menu):
 		self.player.update()				
 			
 		failed = False	
-		
-		for faller in Faller._instances.copy():
+	
+		fallers_to_delete = []
+		for faller in Faller._instances:
 			faller.update()
 			if self.player.get_rect().colliderect(faller.get_rect()):
 				failed = True	
+
 			if faller.get_rect().y >= MenuManager.window_height:
-				faller.delete()
-			
+				fallers_to_delete.append(faller)
+	
+		for faller in fallers_to_delete:
+			faller.delete()
+
 		if failed:
 			self.falleradder.reset()	
 			MenuManager.mode = "menu"

@@ -5,17 +5,20 @@ from random import randint
 from menu_assets import Color
 
 class Actor(object):
-	_instances = set()
+	_instances = []
 	def __init__(self, pos=vec2d(0,0), dim=(0,0)):
-		Actor._instances.add(self)	
+		Actor._instances.append(self)	
 		self.pos = vec2d(pos[0],pos[1])
 		self.rect = pygame.Rect((0,0), dim)	
 		self.color = (255,255,255)	
 		self.velocity = vec2d(0,0)	
+
 	def draw(self, screen):
 		pygame.draw.rect(screen, self.color, self.get_rect())
+
 	def get_rect(self):
 		return pygame.Rect(self.pos.inttup(), (self.rect.width, self.rect.height))
+
 	def delete(self):
 		Actor._instances.remove(self)
 
@@ -25,13 +28,15 @@ class Faller(Actor):
 		size = randint(40,150)
 		super(Faller, self).__init__(pos=vec2d(randint(0 ,1366 - size), -size),dim=(size,size))
 		Faller._instances.add(self)
-		self.color = Color.hsl_to_rgb(Color.random_hsl(low=0.5,high=0.5))
+		self.color = Color.hsl_to_rgb(Color.random_hsl(low=0.5,high=0.75))
 		self.acceleration = 2400.0/(self.rect.width * self.rect.height) 
+	
 	def update(self):
 		self.velocity += vec2d( 0, self.acceleration)
 		if self.velocity.get_length_sqrd != 0:	
 			self.velocity.length *= 0.8
 		self.pos += self.velocity
+
 	def draw(self, screen):
 		pygame.draw.rect(screen, self.color, self.get_rect())
 	def delete(self):
@@ -45,6 +50,7 @@ class Dodger(Actor):
 		self.color    = ( 155, 255, 255)
 		self.velocity = vec2d(0,0)	
 		self.friction = 0.8
+
 	def update(self):
 		if self.velocity.length != 0:
 			self.velocity.length *= self.friction
@@ -52,8 +58,10 @@ class Dodger(Actor):
 			self.pos.x += self.velocity.x
 		if self.pos.y + self.velocity.y > 0 and self.pos.y + self.velocity.y + self.rect.height < 768:
 			self.pos.y += self.velocity.y
+
 	def draw(self, screen):
 		pygame.draw.rect(screen, self.color, self.get_rect())
+
 	def get_rect(self):
 		return pygame.Rect(self.pos.inttup(), (self.rect.width, self.rect.height))
 
@@ -81,5 +89,3 @@ class FallerAdder(object):
 		FallerAdder.increase_rate = FallerAdder.init_increase_rate	
 		Faller._instances = set()
 		Actor._instances = set()
-
-

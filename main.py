@@ -1,11 +1,14 @@
 #!/usr/bin python3
-import pygame
+import pygame_sdl2 as pygame
+import pygame_sdl2.mixer as mixer
+
 from game_menus import MenuManager
 
 pygame.init()
-
-s = pygame.mixer.Sound("background.ogg")
-c = pygame.mixer.Channel(1)
+mixer.init()
+ 
+s = mixer.Sound("background.ogg")
+c = mixer.Channel(1)
 
 c.play(s,loops=-1, fade_ms=100)
 
