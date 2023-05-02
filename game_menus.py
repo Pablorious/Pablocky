@@ -1,3 +1,4 @@
+from config import *
 from menu_assets import *
 from game_assets import *
 from menu_manipulation import margin, gen_rect, flow_right, below
@@ -10,8 +11,8 @@ class StartMenu(Menu):
 	def __init__(self):
 		super(StartMenu,self).__init__()	
 	
-		max_x = 1366
-		max_y = 766
+		max_x = WINDOW_WIDTH
+		max_y = WINDOW_HEIGHT
 		quarter_y = max_y/4
 		quarter_x = max_x/4
 		half_x = max_x/2
@@ -141,11 +142,11 @@ class MenuManager(object):
 	mode = "menu"
 	modes = {"menu" : StartMenu(),"play" : PlayMenu()}
 	running = True 
-	window_width = 1366
-	window_height= 768
+	window_width = WINDOW_WIDTH
+	window_height= WINDOW_HEIGHT
 
 	def __init__(self):
-		self.screen = pygame.display.set_mode((self.window_width, self.window_height),FULLSCREEN)
+		self.screen = pygame.display.set_mode((self.window_width, self.window_height))
 
 	def start(self):
 		while MenuManager.running:

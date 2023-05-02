@@ -1,6 +1,6 @@
 #!/usr/bin python3
-import pygame_sdl2 as pygame
-import pygame_sdl2.mixer as mixer
+import pygame
+import pygame.mixer as mixer
 
 from game_menus import MenuManager
 

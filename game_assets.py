@@ -1,4 +1,5 @@
 import pygame
+from config import *
 from pygame import *
 from vec2d import *
 from random import randint
@@ -26,7 +27,7 @@ class Faller(Actor):
 	_instances = set()
 	def __init__(self):
 		size = randint(40,150)
-		super(Faller, self).__init__(pos=vec2d(randint(0 ,1366 - size), -size),dim=(size,size))
+		super(Faller, self).__init__(pos=vec2d(randint(0 ,WINDOW_WIDTH - size), -size),dim=(size,size))
 		Faller._instances.add(self)
 		self.color = Color.hsl_to_rgb(Color.random_hsl(low=0.5,high=0.75))
 		self.acceleration = 2400.0/(self.rect.width * self.rect.height) 
@@ -54,9 +55,9 @@ class Dodger(Actor):
 	def update(self):
 		if self.velocity.length != 0:
 			self.velocity.length *= self.friction
-		if self.pos.x + self.velocity.x > 0 and self.pos.x + self.velocity.x + self.rect.width < 1366:
+		if self.pos.x + self.velocity.x > 0 and self.pos.x + self.velocity.x + self.rect.width < WINDOW_WIDTH:
 			self.pos.x += self.velocity.x
-		if self.pos.y + self.velocity.y > 0 and self.pos.y + self.velocity.y + self.rect.height < 768:
+		if self.pos.y + self.velocity.y > 0 and self.pos.y + self.velocity.y + self.rect.height < WINDOW_HEIGHT:
 			self.pos.y += self.velocity.y
 
 	def draw(self, screen):
